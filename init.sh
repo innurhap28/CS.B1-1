@@ -19,6 +19,9 @@ orb -m $VM_NAME sudo apt-get update
 orb -m $VM_NAME sudo apt-get upgrade -y
 orb -m $VM_NAME sudo apt-get install -y build-essential curl git wget net-tools
 
+# 과제 수행에 필요한 도구 설치
+orb -m $VM_NAME sudo apt-get install -y openssh-server ufw acl
+
 # 4. 완료 메시지
 echo "---"
 echo "✅ OrbStack Ubuntu 24.04 빌드 완료!"
