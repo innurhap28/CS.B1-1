@@ -1,10 +1,8 @@
 #!/bin/bash
 
-VM_NAME="ubuntu-2404-dev"
-
 # OrbStack 업데이트 문구 삭제
 run_vm() {
-    orb -m $VM_NAME "$@" 2>&1 \
+    orb -m ubuntu-2404-dev "$@" 2>&1 \
     | tr -d '\r' \
     | sed '/╭────────────────/,+8d'
 }
