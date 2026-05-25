@@ -39,10 +39,6 @@ run_vm sudo setfacl -R -d -m g:agent-core:rwx /home/agent-admin/agent-app/bin
 run_vm sudo setfacl -R -m g:agent-core:rwx /var/log/agent-app
 run_vm sudo setfacl -R -d -m g:agent-core:rwx /var/log/agent-app
 
-# monitor.sh 권한 설정
-# run_vm sudo chown agent-dev:agent-core /home/agent-admin/agent-app/bin/monitor.sh
-# run_vm sudo chmod 750 /home/agent-admin/agent-app/bin/monitor.sh
-
 # ACL 확인
 run_vm sudo getfacl /home/agent-admin/agent-app/upload_files
 echo ""
