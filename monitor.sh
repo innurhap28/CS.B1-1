@@ -1,85 +1,42 @@
 #!/bin/bash
 
-APP_NAME="agent_app"
-PORT="15034"
+AGENT_HOME=/home/agent-admin/agent-app
+LOG_DIR=/var/log/agent-app
+LOG_FILE=$LOG_DIR/monitor.log
 
-LOG_DIR="/var/log/agent-app"
-LOG_FILE="$LOG_DIR/monitor.log"
-
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 PID=$$
 
-########################################
-# 1. 프로세스 체크
-########################################
-
-pgrep -f "$APP_NAME" > /dev/null
-
+# 프로세스 체크
+pgrep -f agent-app-linux-x86 > /dev/null
 if [ $? -ne 0 ]; then
-    echo "[ERROR] $APP_NAME process not running"
-    exit 1
+  echo "[ERROR] process not running"
+  exit 1
 fi
 
-########################################
-# 2. 포트 LISTEN 체크
-########################################
-
-ss -tuln | grep ":$PORT " | grep LISTEN > /dev/null
-
+# 포트 체크
+ss -tulnp | grep 15034 > /dev/null
 if [ $? -ne 0 ]; then
-    echo "[ERROR] Port $PORT not listening"
-    exit 1
+  echo "[ERROR] port not listening"
+  exit 1
 fi
 
-########################################
-# 3. 방화벽 상태 체크
-########################################
+# CPU / MEM / DISK
+CPU=$(top -bn1 | awk -F',' '/Cpu\(s\)/ {print 100 - $8}')
+MEM=$(free | awk '/Mem:/ {printf "%.2f", $3/$2 * 100}')
+DISK=$(df / | awk 'NR==2 {gsub("%","",$5); print $5}')
 
-if command -v ufw > /dev/null; then
-    ufw status | grep -i active > /dev/null
+WARN=""
 
-    if [ $? -ne 0 ]; then
-        echo "[WARNING] UFW inactive"
-    fi
+[ "${CPU%.*}" -gt 20 ] && WARN="$WARN CPU"
+[ "${MEM%.*}" -gt 10 ] && WARN="$WARN MEM"
+[ "$DISK" -gt 80 ] && WARN="$WARN DISK"
 
-elif command -v firewall-cmd > /dev/null; then
-    firewall-cmd --state > /dev/null 2>&1
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] PID:$PID CPU:${CPU}% MEM:${MEM}% DISK_USED:${DISK}% WARN:$WARN" >> $LOG_FILE
 
-    if [ $? -ne 0 ]; then
-        echo "[WARNING] firewalld inactive"
-    fi
+# firewall check (warning only)
+ufw status >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "[WARNING] firewall inactive" >> $LOG_FILE
 fi
 
-########################################
-# 4. 시스템 자원 수집
-########################################
-
-CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}')
-MEM=$(free | awk '/Mem:/ {printf("%.1f"), $3/$2 * 100}')
-DISK=$(df / | awk 'END {gsub("%",""); print $5}')
-
-########################################
-# 5. 임계값 경고
-########################################
-
-CPU_INT=${CPU%.*}
-
-if [ "$CPU_INT" -gt 20 ]; then
-    echo "[WARNING] CPU usage high: ${CPU}%"
-fi
-
-MEM_INT=${MEM%.*}
-
-if [ "$MEM_INT" -gt 10 ]; then
-    echo "[WARNING] Memory usage high: ${MEM}%"
-fi
-
-if [ "$DISK" -gt 80 ]; then
-    echo "[WARNING] Disk usage high: ${DISK}%"
-fi
-
-########################################
-# 6. 로그 기록
-########################################
-
-echo "[$TIMESTAMP] PID:$PID CPU:${CPU}% MEM:${MEM}% DISK_USED:${DISK}%" >> "$LOG_FILE"
+exit 0

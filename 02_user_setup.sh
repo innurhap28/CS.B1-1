@@ -13,14 +13,10 @@ run_vm() {
 run_vm sudo groupadd agent-core
 run_vm sudo groupadd agent-common
 
-run_vm sudo useradd -m agent-admin
-run_vm sudo useradd -m agent-dev
-run_vm sudo useradd -m agent-test
-
-# 사용자의 기본 로그인 쉘을 bash로 변경
-run_vm sudo usermod -s /bin/bash agent-admin
-run_vm sudo usermod -s /bin/bash agent-dev
-run_vm sudo usermod -s /bin/bash agent-test
+# 계정 생성 및 기본 로그인 쉘 지정 
+run_vm sudo useradd -m -s /bin/bash agent-admin
+run_vm sudo useradd -m -s /bin/bash agent-dev
+run_vm sudo useradd -m -s /bin/bash agent-test
 
 # 그룹에 계정을 할당
 run_vm sudo usermod -aG agent-common agent-admin
