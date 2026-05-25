@@ -25,19 +25,20 @@ PID=$$
 # 로그 디렉토리 확인
 mkdir -p "$LOG_DIR"
 
-# process health check
+# Health Check (실패 시 종료)
+# Process..
 if ! pgrep -f "$APP_NAME" > /dev/null; then
     echo "[$TIMESTAMP] [ERROR] process not running" >> "$LOG_FILE"
     exit 1
 fi
 
-# port health check
+# Port..
 if ! ss -lntp | grep -q ":$APP_PORT "; then
     echo "[$TIMESTAMP] [ERROR] port $APP_PORT not listening" >> "$LOG_FILE"
     exit 1
 fi
 
-# firewall check
+# Firewall Check (경고만 출력)
 FIREWALL_STATUS="ACTIVE"
 
 if ! ufw status | grep -q "Status: active"; then
@@ -45,8 +46,8 @@ if ! ufw status | grep -q "Status: active"; then
     echo "[$TIMESTAMP] [WARNING] firewall inactive" >> "$LOG_FILE"
 fi
 
-# resource usage
-CPU=$(top -bn1 | awk '/Cpu\(s\)/ {print int(100 - $8)}')
+# Resource Usage
+CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print int(100 - $8)}')
 MEM=$(free | awk '/Mem:/ {print int($3/$2 * 100)}')
 DISK=$(df / | awk 'NR==2 {gsub("%","",$5); print $5}')
 
@@ -90,10 +91,20 @@ read -p "다음 단계로 진행하려면 Enter를 누르세요..."
 echo ""
 echo "monitor log 생성 확인까지 1분이 소요됩니다."
 
-sleep 60
+echo "Before:"
+run_vm sudo wc -l /var/log/agent-app/monitor.log
 
+echo ""
+echo "1분 대기 중..."
+sleep 65
+
+echo ""
+echo "After:"
+run_vm sudo wc -l /var/log/agent-app/monitor.log
+
+echo ""
+echo "최근 로그:"
 run_vm sudo tail -n 10 /var/log/agent-app/monitor.log
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
 
 # 상태 겁증
 run_vm pgrep -f agent-app-linux-x86 || echo "[FAIL] process"

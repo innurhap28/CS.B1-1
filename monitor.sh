@@ -12,19 +12,20 @@ PID=$$
 # 로그 디렉토리 확인
 mkdir -p "$LOG_DIR"
 
-# process health check
+# Health Check (실패 시 종료)
+# Process..
 if ! pgrep -f "$APP_NAME" > /dev/null; then
     echo "[$TIMESTAMP] [ERROR] process not running" >> "$LOG_FILE"
     exit 1
 fi
 
-# port health check
+# Port..
 if ! ss -lntp | grep -q ":$APP_PORT "; then
     echo "[$TIMESTAMP] [ERROR] port $APP_PORT not listening" >> "$LOG_FILE"
     exit 1
 fi
 
-# firewall check
+# Firewall Check (경고만 출력)
 FIREWALL_STATUS="ACTIVE"
 
 if ! ufw status | grep -q "Status: active"; then
@@ -32,7 +33,7 @@ if ! ufw status | grep -q "Status: active"; then
     echo "[$TIMESTAMP] [WARNING] firewall inactive" >> "$LOG_FILE"
 fi
 
-# resource usage
+# Resource Usage
 CPU=$(top -bn1 | awk '/Cpu\(s\)/ {print int(100 - $8)}')
 MEM=$(free | awk '/Mem:/ {print int($3/$2 * 100)}')
 DISK=$(df / | awk 'NR==2 {gsub("%","",$5); print $5}')

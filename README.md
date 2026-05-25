@@ -347,6 +347,20 @@ tcp LISTEN 0 1 0.0.0.0:15034 0.0.0.0:* users:(("agent-app-linux",pid=5397,fd=4))
 
 ## 03-6. monitor.sh 실행 결과(프로세스/포트/리소스/경고)
 
-## 03-7. /var/log/agent-app/monitor.log 누적 기록 확인(최근 라인)
 
+
+## 03-7. /var/log/agent-app/monitor.log 누적 기록 확인(최근 라인)
+```
+innuendo3712@c5r7s3 CS.B1-1 % orb -m ubuntu-2404-dev sudo tail -n 10 /var/log/agent-app/monitor.log
+[2026-05-25 23:54:02] [WARNING] firewall inactive
+[2026-05-25 23:54:02] PID:4432 CPU:100% MEM:4% DISK_USED:1% FIREWALL:INACTIVE WARNING:CPU
+[2026-05-25 23:55:01] [WARNING] firewall inactive
+[2026-05-25 23:55:01] PID:4451 CPU:3% MEM:5% DISK_USED:1% FIREWALL:INACTIVE WARNING:NONE
+[2026-05-25 23:56:01] [WARNING] firewall inactive
+[2026-05-25 23:56:01] PID:4470 CPU:1% MEM:3% DISK_USED:1% FIREWALL:INACTIVE WARNING:NONE
+[2026-05-25 23:57:01] [WARNING] firewall inactive
+[2026-05-25 23:57:01] PID:4494 CPU:100% MEM:5% DISK_USED:1% FIREWALL:INACTIVE WARNING:CPU
+[2026-05-25 23:58:01] [WARNING] firewall inactive
+[2026-05-25 23:58:01] PID:4513 CPU:1% MEM:4% DISK_USED:1% FIREWALL:INACTIVE WARNING:NONE
+```
 ## 03-8. crontab 매분 실행 등록 및 자동 실행 확인 (1분 후 로그 증가)
