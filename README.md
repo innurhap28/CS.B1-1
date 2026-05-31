@@ -347,6 +347,27 @@ tcp LISTEN 0 1 0.0.0.0:15034 0.0.0.0:* users:(("agent-app-linux",pid=5397,fd=4))
 
 ## 03-6. monitor.sh 실행 결과(프로세스/포트/리소스/경고)
 
+### 1) 실행 명령
+
+```
+sudo /home/agent-admin/agent-app/bin/monitor.sh
+```
+
+### 2) 실행 결과
+```
+
+```
+### 3) 확인 내용 
+- agent-app 프로세스 정상 동작 확인
+- 15034 포트 LISTEN 상태 확인
+- CPU/Memory/Disk 사용량 수집 확인
+- 방화벽 상태 확인
+- 이상 상태 발생 시 WARNING 출력 구조 확인
+
+### 4) 설계 의도
+- 서비스 상태를 단일 스크립트로 점검
+- 프로세스/포트/리소스 상태 통합 모니터링
+- 이상 징후 발생 시 경고 로그 기록
 
 
 ## 03-7. /var/log/agent-app/monitor.log 누적 기록 확인(최근 라인)
@@ -364,3 +385,31 @@ innuendo3712@c5r7s3 CS.B1-1 % orb -m ubuntu-2404-dev sudo tail -n 10 /var/log/ag
 [2026-05-25 23:58:01] PID:4513 CPU:1% MEM:4% DISK_USED:1% FIREWALL:INACTIVE WARNING:NONE
 ```
 ## 03-8. crontab 매분 실행 등록 및 자동 실행 확인 (1분 후 로그 증가)
+> monitor.sh를 주기적으로 실행하기 위해 crontab에 등록하였으며, 로그 파일이 매분 자동으로 증가하는 것을 확인하였따. 
+
+### 1) crontab 등록
+```
+sudo crontab -l
+```
+확인 결과 : 
+```
+* * * * * /home/agent-admin/agent-app/bin/monitor.sh
+```
+
+### 2) 자동 실행 확인
+로그 파일의 마지막 기록을 확인하였다. 
+```
+sudo tail -n 10 /var/log/agent-app/monitor.log
+```
+```
+[2026-05-25 23:54:02] [WARNING] firewall inactive
+[2026-05-25 23:54:02] PID:4432 CPU:100% MEM:4% DISK_USED:1% FIREWALL:INACTIVE WARNING:CPU
+[2026-05-25 23:55:01] [WARNING] firewall inactive
+[2026-05-25 23:55:01] PID:4451 CPU:3% MEM:5% DISK_USED:1% FIREWALL:INACTIVE WARNING:NONE
+[2026-05-25 23:56:01] [WARNING] firewall inactive
+[2026-05-25 23:56:01] PID:4470 CPU:1% MEM:3% DISK_USED:1% FIREWALL:INACTIVE WARNING:NONE
+[2026-05-25 23:57:01] [WARNING] firewall inactive
+[2026-05-25 23:57:01] PID:4494 CPU:100% MEM:5% DISK_USED:1% FIREWALL:INACTIVE WARNING:CPU
+[2026-05-25 23:58:01] [WARNING] firewall inactive
+[2026-05-25 23:58:01] PID:4513 CPU:1% MEM:4% DISK_USED:1% FIREWALL:INACTIVE WARNING:NONE
+```

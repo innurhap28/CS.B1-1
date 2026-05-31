@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd assignment_scripts
 bash 01_security.sh
 
 echo "===================="

@@ -41,15 +41,41 @@ DISK=$(df / | awk 'NR==2 {gsub("%","",$5); print $5}')
 WARNING="NONE"
 
 if [ "$CPU" -gt 20 ]; then
-    WARNING="CPU"
+    echo "[WARNING] CPU usage high: ${CPU}%"
 fi
 
 if [ "$MEM" -gt 10 ]; then
-    WARNING="$WARNING MEM"
+    echo "[WARNING] MEM usage high: ${MEM}%"
 fi
 
 if [ "$DISK" -gt 80 ]; then
-    WARNING="$WARNING DISK"
+    echo "[WARNING] DISK usage high: ${DISK}%"
+fi
+
+MAX_SIZE=$((10 * 1024 * 1024))
+MAX_FILES=10
+
+# Log Rotation
+if [ -f "$LOG_FILE" ]; then
+    FILE_SIZE=$(stat -c%s "$LOG_FILE")
+
+    if [ "$FILE_SIZE" -ge "$MAX_SIZE" ]; then
+
+        # 9 -> 10, 8 -> 9 ...
+        for ((i=MAX_FILES-1; i>=1; i--)); do
+            if [ -f "${LOG_FILE}.${i}" ]; then
+                mv "${LOG_FILE}.${i}" "${LOG_FILE}.$((i+1))"
+            fi
+        done
+
+        # 현재 로그를 .1로 이동
+        mv "$LOG_FILE" "${LOG_FILE}.1"
+
+        # 10개 초과 삭제
+        [ -f "${LOG_FILE}.11" ] && rm -f "${LOG_FILE}.11"
+
+        touch "$LOG_FILE"
+    fi
 fi
 
 # logging
