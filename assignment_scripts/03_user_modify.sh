@@ -24,6 +24,14 @@ run_vm sudo chmod 2770 /home/agent-admin/agent-app/api_keys
 run_vm sudo chmod 2770 /home/agent-admin/agent-app/bin
 run_vm sudo chmod 2770 /var/log/agent-app
 
+run_vm sudo ls -la /home/agent-admin/agent-app
+run_vm sudo ls -ld /var/log/agent-app
+
+echo ""
+echo "디렉토리 소유권 및 권한이 잘 설정되었는지 확인하세요"
+read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
+
 
 # 03-2.
 # ACL 설정
@@ -42,5 +50,5 @@ run_vm sudo setfacl -R -d -m g:agent-core:rwx /var/log/agent-app
 # ACL 확인
 run_vm sudo getfacl /home/agent-admin/agent-app/upload_files
 echo ""
-echo "권한이 잘 부여되었는지 확인하세요."
+echo "ACL이 잘 적용되었는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."

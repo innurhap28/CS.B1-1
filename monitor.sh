@@ -21,23 +21,29 @@ echo "[HEALTH CHECK]"
 if ! pgrep -f "$APP_NAME" > /dev/null; then
     echo "[$TIMESTAMP] [ERROR] process not running" >> "$LOG_FILE"
     exit 1
-    else echo "Checking process '$APP_NAME'... [OK] (PID=$APP_PID)"
+else echo "Checking process '$APP_NAME'... [OK] (PID=$APP_PID)"
 fi
 
 # Port..
 if ! ss -lntp | grep -q ":$APP_PORT "; then
     echo "[$TIMESTAMP] [ERROR] port $APP_PORT not listening" >> "$LOG_FILE"
     exit 1
-    else echo "Checking port $APP_PORT... [OK]"
+else echo "Checking port $APP_PORT... [OK]"
 fi
 
 # Firewall Check (경고만 출력)
-FIREWALL_STATUS="ACTIVE"
+FIREWALL_STATUS="INACTIVE"
 
-if ! ufw status | grep -q "Status: active"; then
-    FIREWALL_STATUS="INACTIVE"
-    echo "[$TIMESTAMP] [WARNING] firewall inactive" >> "$LOG_FILE"
+if systemctl is-active --quiet ufw 2>/dev/null; then
+    FIREWALL_STATUS="ACTIVE"
+elif [ -r /etc/ufw/ufw.conf ] && grep -qE '^ENABLED=yes' /etc/ufw/ufw.conf 2>/dev/null; then
+    FIREWALL_STATUS="ACTIVE"
+elif systemctl is-active --quiet firewalld 2>/dev/null; then
 fi
+if [[ "${FIREWALL_STATUS}" != "ACTIVE" ]]; then
+    echo "[WARNING] Firewall is not active."
+fi
+
 
 # Resource Usage
 CPU=$(top -bn1 | awk '/Cpu\(s\)/ {print int(100 - $8)}')

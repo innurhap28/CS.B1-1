@@ -19,11 +19,12 @@ run_vm sudo systemctl disable --now ssh.socket || true
 run_vm sudo systemctl restart ssh
 
 # 포트 변경 적용 여부 확인
-run_vm sudo ss -tulnp | grep 20022
+run_vm sudo ss -tuln | grep 20022
 
 echo ""
 echo "SSH 설정이 정상 적용되었는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
 
 
 # 01-2. 

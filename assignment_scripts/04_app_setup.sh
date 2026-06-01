@@ -21,14 +21,15 @@ export AGENT_LOG_DIR=/var/log/agent-app
 EOF'
 
 # 적용 확인
-run_vm sudo -u agent-admin bash -ic 'echo $AGENT_HOME'
-run_vm sudo -u agent-admin bash -ic 'echo $AGENT_PORT'
-run_vm sudo -u agent-admin bash -ic 'echo $AGENT_UPLOAD_DIR'
-run_vm sudo -u agent-admin bash -ic 'echo $AGENT_KEY_PATH'
-run_vm sudo -u agent-admin bash -ic 'echo $AGENT_LOG_DIR'
+run_vm sudo -u agent-admin bash -ic 'echo AGENT_HOME = $AGENT_HOME'
+run_vm sudo -u agent-admin bash -ic 'echo AGENT_PORT = $AGENT_PORT'
+run_vm sudo -u agent-admin bash -ic 'echo AGENT_UPLOAD_DIR = $AGENT_UPLOAD_DIR'
+run_vm sudo -u agent-admin bash -ic 'echo AGENT_KEY_PATH = $AGENT_KEY_PATH'
+run_vm sudo -u agent-admin bash -ic 'echo AGENT_LOG_DIR = $AGENT_LOG_DIR'
 echo ""
-echo "설정이 정상 적용되었는지 확인하세요."
+echo "환경변수가 잘 설정되었는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
 
 
 # 04-2. 
@@ -41,6 +42,7 @@ run_vm sudo -u agent-admin bash -ic 'ls -l $AGENT_KEY_PATH'
 echo ""
 echo "설정이 정상 적용되었는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
 
 
 # 04-3. 
@@ -60,6 +62,7 @@ run_vm cat /tmp/agent-app.log
 echo ""
 echo "Boot Sequence 5단계가 모두 [OK]로 출력되었는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
 
 # 포트 LISTEN 확인
 sleep 3

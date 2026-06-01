@@ -27,29 +27,18 @@ run_vm sudo usermod -aG agent-core agent-dev
 
 # 적용 확인
 run_vm id agent-admin
-echo ""
-echo "설정이 정상 적용되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-
 run_vm id agent-dev
-echo ""
-echo "설정이 정상 적용되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-
 run_vm id agent-test
 echo ""
 echo "설정이 정상 적용되었는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
 
 
 # 02-2. 
 # 디렉토리 구조 설정
 run_vm sudo mkdir -p /home/agent-admin/agent-app/{upload_files,api_keys,bin}
 run_vm sudo ls -la /home/agent-admin/agent-app
-echo ""
-echo "디렉토리가 잘 생성되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-
 run_vm sudo mkdir -p /var/log/agent-app
 run_vm sudo ls -ld /var/log/agent-app
 echo ""

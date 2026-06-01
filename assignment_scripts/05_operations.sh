@@ -112,11 +112,12 @@ echo "[INFO] Log appended: /var/log/agent-app/monitor.log"
 exit 0
 EOF
 
-run_vm sudo /home/agent-admin/agent-app/bin/monitor.sh
+run_vm sudo bash /home/agent-admin/agent-app/bin/monitor.sh
 
 echo ""
 echo "monitor.sh이 정상적으로 출력되는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
 
 # 권한 설정
 run_vm sudo chown agent-dev:agent-core /home/agent-admin/agent-app/bin/monitor.sh
@@ -134,6 +135,7 @@ run_vm sudo -u agent-admin crontab -l
 echo ""
 echo "Cron 등록이 되었는지 확인하세요."
 read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+echo "=============================="
 
 echo ""
 echo "monitor log 생성 확인까지 1분이 소요됩니다."
