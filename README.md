@@ -355,7 +355,18 @@ sudo /home/agent-admin/agent-app/bin/monitor.sh
 
 ### 2) 실행 결과
 ```
+===== SYSTEM MONITOR RESULT =====
 
+[HEALTH CHECK]
+Checking process 'agent-app-linux-x86'... [OK] (PID=4106)
+Checking port 15034... [OK]
+
+[RESOURCE MONITORING]
+CPU Usage : 1%
+MEM Usage : 5%
+DISK Used : 1%
+
+[INFO] Log appended: /var/log/agent-app/monitor.log
 ```
 ### 3) 확인 내용 
 - agent-app 프로세스 정상 동작 확인
