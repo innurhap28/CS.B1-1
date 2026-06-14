@@ -1,11 +1,6 @@
 #!/bin/bash
 
-# OrbStack 업데이트 문구 삭제
-run_vm() {
-    orb -m ubuntu-2404-dev "$@" 2>&1 \
-    | tr -d '\r' \
-    | sed '/╭────────────────/,+8d'
-}
+source ../library.sh
 
 
 # 02-1.
@@ -29,10 +24,8 @@ run_vm sudo usermod -aG agent-core agent-dev
 run_vm id agent-admin
 run_vm id agent-dev
 run_vm id agent-test
-echo ""
-echo "설정이 정상 적용되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-echo "=============================="
+
+prompt_step "계정 및 그룹이 잘 생성되었는지 확인하세요."
 
 
 # 02-2. 
@@ -41,6 +34,5 @@ run_vm sudo mkdir -p /home/agent-admin/agent-app/{upload_files,api_keys,bin}
 run_vm sudo ls -la /home/agent-admin/agent-app
 run_vm sudo mkdir -p /var/log/agent-app
 run_vm sudo ls -ld /var/log/agent-app
-echo ""
-echo "디렉토리가 잘 생성되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+
+prompt_step "디렉토리가 잘 생성되었는지 확인하세요."

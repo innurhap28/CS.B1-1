@@ -2,7 +2,6 @@
 
 APP_NAME="agent-app-linux-x86"
 APP_PORT="15034"
-
 LOG_DIR="/var/log/agent-app"
 LOG_FILE="$LOG_DIR/monitor.log"
 
@@ -10,13 +9,10 @@ TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 PID=$$
 APP_PID=$(pgrep -f "$APP_NAME" | head -n 1)
 
-# 로그 디렉토리 확인
 mkdir -p "$LOG_DIR"
-
 echo "===== SYSTEM MONITOR RESULT ====="
 
-# Health Check (실패 시 종료)
-# Process..
+# Health Check (실패 시 종료) : Process
 echo "[HEALTH CHECK]"
 if ! pgrep -f "$APP_NAME" > /dev/null; then
     echo "[$TIMESTAMP] [ERROR] process not running" >> "$LOG_FILE"
@@ -24,7 +20,7 @@ if ! pgrep -f "$APP_NAME" > /dev/null; then
 else echo "Checking process '$APP_NAME'... [OK] (PID=$APP_PID)"
 fi
 
-# Port..
+# Health Check (실패 시 종료) : Port
 if ! ss -lntp | grep -q ":$APP_PORT "; then
     echo "[$TIMESTAMP] [ERROR] port $APP_PORT not listening" >> "$LOG_FILE"
     exit 1
@@ -44,8 +40,7 @@ if [[ "${FIREWALL_STATUS}" != "ACTIVE" ]]; then
     echo "[WARNING] Firewall is not active."
 fi
 
-
-# Resource Usage
+# Resource Usage (경고만 출력)
 CPU=$(top -bn1 | awk '/Cpu\(s\)/ {print int(100 - $8)}')
 MEM=$(free | awk '/Mem:/ {print int($3/$2 * 100)}')
 DISK=$(df / | awk 'NR==2 {gsub("%","",$5); print $5}')
@@ -54,7 +49,6 @@ echo "[RESOURCE MONITORING]"
 echo "CPU Usage : $CPU%"
 echo "MEM Usage : $MEM%"
 echo "DISK Used : $DISK%"
-
 
 if [ "$CPU" -gt 20 ]; then
     WARNING="${WARNING}CPU,"
@@ -71,10 +65,10 @@ if [ "$DISK" -gt 80 ]; then
     echo "[WARNING] DISK usage high: ${DISK}% > 80"
 fi
 
+# Log Rotation
 MAX_SIZE=$((10 * 1024 * 1024))
 MAX_FILES=10
 
-# Log Rotation
 if [ -f "$LOG_FILE" ]; then
     FILE_SIZE=$(stat -c%s "$LOG_FILE")
 

@@ -1,11 +1,6 @@
 #!/bin/bash
 
-# OrbStack 업데이트 문구 삭제
-run_vm() {
-    orb -m ubuntu-2404-dev "$@" 2>&1 \
-    | tr -d '\r' \
-    | sed '/╭────────────────/,+8d'
-}
+source ../library.sh
 
 
 # 01-1. 
@@ -21,10 +16,7 @@ run_vm sudo systemctl restart ssh
 # 포트 변경 적용 여부 확인
 run_vm sudo ss -tuln | grep 20022
 
-echo ""
-echo "SSH 설정이 정상 적용되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-echo "=============================="
+prompt_step "SSH 설정이 정상 적용되었는지 확인하세요."
 
 
 # 01-2. 
@@ -42,6 +34,4 @@ run_vm sudo ufw enable
 # 적용 여부 확인
 run_vm sudo ufw status
 
-echo ""
-echo "UFW 설정이 정상 적용되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+prompt_step "UFW 설정이 정상 적용되었는지 확인하세요."

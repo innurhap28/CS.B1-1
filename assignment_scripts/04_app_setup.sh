@@ -1,11 +1,6 @@
 #!/bin/bash
 
-# OrbStack 업데이트 문구 삭제
-run_vm() {
-    orb -m ubuntu-2404-dev "$@" 2>&1 \
-    | tr -d '\r' \
-    | sed '/╭────────────────/,+8d'
-}
+source ../library.sh
 
 
 # 04-1. 
@@ -26,10 +21,8 @@ run_vm sudo -u agent-admin bash -ic 'echo AGENT_PORT = $AGENT_PORT'
 run_vm sudo -u agent-admin bash -ic 'echo AGENT_UPLOAD_DIR = $AGENT_UPLOAD_DIR'
 run_vm sudo -u agent-admin bash -ic 'echo AGENT_KEY_PATH = $AGENT_KEY_PATH'
 run_vm sudo -u agent-admin bash -ic 'echo AGENT_LOG_DIR = $AGENT_LOG_DIR'
-echo ""
-echo "환경변수가 잘 설정되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-echo "=============================="
+
+prompt_step "환경변수가 잘 설정되었는지 확인하세요."
 
 
 # 04-2. 
@@ -39,10 +32,8 @@ run_vm sudo -u agent-admin bash -ic 'chmod 660 $AGENT_KEY_PATH/secret.key'
 
 # 적용 확인
 run_vm sudo -u agent-admin bash -ic 'ls -l $AGENT_KEY_PATH'
-echo ""
-echo "설정이 정상 적용되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-echo "=============================="
+
+prompt_step "키 파일이 생성되었는지 확인하세요."
 
 
 # 04-3. 
@@ -59,14 +50,9 @@ sleep 3
 
 # BOOT Sequence 확인
 run_vm cat /tmp/agent-app.log
-echo ""
-echo "Boot Sequence 5단계가 모두 [OK]로 출력되었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
-echo "=============================="
+prompt_step "Boot Sequence 5단계가 모두 [OK]로 출력되었는지 확인하세요."
 
 # 포트 LISTEN 확인
 sleep 3
 run_vm sudo ss -tulnp | grep 15034
-echo ""
-echo "앱이 정상적으로 포트를 열었는지 확인하세요."
-read -p "다음 단계로 진행하려면 Enter를 누르세요..."
+prompt_step "앱이 정상적으로 포트를 열었는지 확인하세요."
