@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source library.sh
+source ../library.sh
 
 
 # 02-1.

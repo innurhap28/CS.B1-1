@@ -9,7 +9,7 @@ run_vm() {
 
 # 출력 문구 함수
 prompt_step() {
-    local message='$1'
+    local message="$1"
 
     echo "=============================="
     echo "$message"
@@ -20,8 +20,8 @@ prompt_step() {
 
 # 다음 스크립트로 진행
 run_step() {
-    local script='$1'
-    local message='$2'
+    local script="$1"
+    local message="$2"
 
     bash "$script" || {
         echo "[ERROR] $script 실행 실패"

@@ -35,7 +35,9 @@ if systemctl is-active --quiet ufw 2>/dev/null; then
 elif [ -r /etc/ufw/ufw.conf ] && grep -qE '^ENABLED=yes' /etc/ufw/ufw.conf 2>/dev/null; then
     FIREWALL_STATUS="ACTIVE"
 elif systemctl is-active --quiet firewalld 2>/dev/null; then
+    FIREWALL_STATUS="ACTIVE"
 fi
+
 if [[ "${FIREWALL_STATUS}" != "ACTIVE" ]]; then
     echo "[WARNING] Firewall is not active."
 fi
