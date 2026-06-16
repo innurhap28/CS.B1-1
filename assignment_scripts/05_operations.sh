@@ -149,5 +149,3 @@ run_vm sudo tail -n 10 /var/log/agent-app/monitor.log
 # 상태 겁증
 run_vm pgrep -f agent-app-linux-x86 || echo "[FAIL] process"
 run_vm sudo ss -tulnp | grep 15034 || echo "[FAIL] port"
-
-prompt_step "검증이 완료되었습니다."
